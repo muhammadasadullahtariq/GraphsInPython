@@ -11,10 +11,9 @@ def limitCheck(limit, check):
 
 def GatherGrapg():
     node = int(input("Enter Number of nodes:"))
-    node += 1
     for i in range(1, node):
         list = []
-        flag = True;
+        flag = True
         while (flag):
             opt = int(input("Enter Connected Node to " + str(i)))
             if (limitCheck(node, opt)):
@@ -24,9 +23,9 @@ def GatherGrapg():
                 opti.append(wei)
                 list.append(opti)
             else:
-                flag = False;
+                flag = False
         graph[i] = list
-def bfs(start):
+def bfs(start):#enter starting node to traverse
 
     visted=[]
     queue=[]
@@ -34,8 +33,8 @@ def bfs(start):
     if (start in a):
         queue.append(start)
         while( queue):
-            i=queue.pop()
-            print(i);
+            i=queue.pop(0)
+            print(i)
             visted.append(i)
             edges=graph[i]
             for j in range(len(edges)):
@@ -46,4 +45,4 @@ def bfs(start):
 
 
 
-bfs(1);
+bfs(1)
