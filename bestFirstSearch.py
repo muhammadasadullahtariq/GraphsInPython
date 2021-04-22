@@ -10,7 +10,6 @@ class breathFirstSearch:
                       'f': [['g', 20], ['d', 25]],
                       'g': [['f', 20], ['h', 10]],
                       'h': [['e', 9], ['g', 10]]}
-        self.costGraph=self.graph.copy()
         self.Heuristic={'a':40,
                         'b':32,
                         'c':25,
@@ -58,14 +57,13 @@ class breathFirstSearch:
                 self.visited.append(node)
                 if(node[1]==self.goal):
                     break
-                list=self.graph[node[1]]
+                list=self.graph[node[1]].copy()
                 while(list):
                     heapq.heappush(heapList,(self.Heuristic[list[0][0]],list[0][0]))
                     list.pop(0)
         print(self.visited)
 
     def calculateCost(self,visit):
-        print(self.costGraph)
         pathCost=0;
         for i in range(0,len(visit)-1):
             list=self.graph[visit[i]]
@@ -86,8 +84,5 @@ class breathFirstSearch:
 
 
 b=breathFirstSearch()
-b.costGraph
 b.algo('a')
-b.costGraph
 b.path()
-#print(b.graph)
