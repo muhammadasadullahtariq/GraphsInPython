@@ -1,13 +1,42 @@
 import heapq
 
-start,end,grid,row,column,heuristic,visited,distance,file=[],[],[],3,3,[],[],[],open("GFSOutput.txt","w")
+start,end,grid,row,column,heuristic,visited,distance,file,rowLimit,columnLimit=[],[],[],3,3,[],[],[],open("LimitedAstarOutput.txt","w"),0,0
+
 DestinationFound=False
+
+def enterLimit():
+    global rowLimit
+    global columnLimit
+    while(True):
+        a=input("Enter R for row limit\nC for column limit\nB for both\nN for No Limit")
+        a=str.upper(a)
+        if(a=="R"):
+            r=int(input("Enter Row Limit:"))
+            if(rowLimit>=r):
+                rowLimit=r
+                break
+        elif(a=="C"):
+            c=int(input("Enter Column Limit:"))
+            if(columnLimit>=c):
+                columnLimit=c
+                break
+        elif(a=="B"):
+            r = int(input("Enter Row Limit:"))
+            c = int(input("Enter Column Limit:"))
+            if (rowLimit >= r and columnLimit>=c):
+                rowLimit=r
+                columnLimit=c
+                break
+        elif(a=="N"):
+            break
 
 def readFile():
     global column
     global row
     global start
     global end
+    global rowLimit
+    global columnLimit
     file = open("C:\\Users\Asad Ullah\Downloads\Compressed\grid.txt")
     column=int(file.read(3))
     row=int(file.read(3))
@@ -31,9 +60,9 @@ def readFile():
                 a=int(a)
                 rowElement.append(a)
         grid.append(rowElement)
-    print(grid)
-    print(start)
-    print(end)
+    rowLimit=row
+    columnLimit=column
+    enterLimit()
 def mod(num):
     if(num<0):
         return num*-1;
@@ -116,13 +145,20 @@ def PathCalculation():
         file.write(str(i))
     file.write("\nFinal Grid:\n")
 
+def CheckLimit(node):
+    if(node[0]<rowLimit and node[1]<columnLimit):
+        return True
+    else:
+        return False
 
-def GFSAlgo():
+def LimitedAStarAlgo():
     global visited
+    global distance
     global DestinationFound
     print(start)
     print(end)
     heapList = []
+    distance.append(0)
     heapq.heappush(heapList, (heuristic[start[0]][start[1]], start))
     while (heapList):
         node = heapq.heappop(heapList)
@@ -136,21 +172,21 @@ def GFSAlgo():
             list = findNeighbour(node[1])
             print(list)
             while (list):
-                if(grid[list[0][0]][list[0][1]]==0):
-                    heapq.heappush(heapList, (heuristic[list[0][0]][list[0][1]], list[0]))
+                if(CheckLimit(list[0])):
+                    if (grid[list[0][0]][list[0][1]] == 0):
+                        distance.append(findDistance(visited[-1],list[0]))
+                        heapq.heappush(heapList, (heuristic[list[0][0]][list[0][1]]+distance[-1], list[0]))
                 list.pop(0)
     print("Visited")
     print(visited)
-    PathCalculation()
+    PathCalculation();
 def WriteFile():
     for i in range(row):
         for j in range(column):
             file.write(str(grid[i][j])+"\t")
         file.write("\n")
 
-
 readFile()
 calculateHeursiticValue()
-GFSAlgo()
+LimitedAStarAlgo()
 WriteFile()
-

@@ -1,6 +1,9 @@
 import heapq
 
-start,end,grid,row,column,heuristic,visited,distance=[],[],[],3,3,[],[],[]
+start,end,grid,row,column,heuristic,visited,distance,file=[],[],[],3,3,[],[],[],open("AstarOutput.txt","w");
+DestinationFound=False
+
+
 def readFile():
     global column
     global row
@@ -96,21 +99,41 @@ def findDistance(source,destination):
         return 0
     else:
         return 2
+
+def PathCalculation():
+    global grid
+    for i in visited:
+        grid[i[0]][i[1]]='#'
+    sum=0
+    for i in range(len(visited)-1):
+        sum=sum+findDistance(visited[i],visited[i+1])
+    if(DestinationFound):
+        file.write("Path To Destination Found:\n")
+    else:
+        file.write("Path To Destination not Found:\n")
+    file.write("Total Distance Covered is:"+str(sum)+"\n");
+    file.write("Vissited Nodes:\n");
+    for i in visited:
+        file.write(str(i))
+    file.write("\nFinal Grid:\n")
+
 def aStarAlgo():
     global visited
     global distance
+    global DestinationFound
     print(start)
     print(end)
     heapList = []
     distance.append(0)
     heapq.heappush(heapList, (heuristic[start[0]][start[1]], start))
-    while (heapq):
+    while (heapList):
         node = heapq.heappop(heapList)
         print(node)
         print(visited)
         if (not (node[1] in visited)):
             visited.append(node[1])
             if (node[1] == end):
+                DestinationFound=True
                 break
             list = findNeighbour(node[1])
             print(list)
@@ -121,6 +144,14 @@ def aStarAlgo():
                 list.pop(0)
     print("Visited")
     print(visited)
+    PathCalculation();
+def WriteFile():
+    for i in range(row):
+        for j in range(column):
+            file.write(str(grid[i][j])+"\t")
+        file.write("\n")
+
 readFile()
 calculateHeursiticValue()
 aStarAlgo()
+WriteFile()
